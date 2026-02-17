@@ -77,7 +77,15 @@ handler = SlackRequestHandler(app)
 
 @flask_app.route("/slack/events", methods=["POST"])
 def slack_events():
+    data = request.get_json()
+
+    # Slack URL verification
+    if data.get("type") == "url_verification":
+        return data.get("challenge"), 200
+
+    # Otherwise, handle normal events
     return handler.handle(request)
+
 
 if __name__ == "__main__":
     flask_app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 3000)))
