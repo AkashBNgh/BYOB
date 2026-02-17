@@ -4,3 +4,4 @@ pandas
 matplotlib
 huggingface_hub
 python-dotenv
+flask

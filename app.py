@@ -1,7 +1,9 @@
 import os
 from dotenv import load_dotenv
 from slack_bolt import App
-from slack_bolt.adapter.socket_mode import SocketModeHandler
+from slack_bolt.adapter.flask import SlackRequestHandler
+from flask import Flask, request
+import os
 
 from nlp_engine import natural_language_to_sql
 from db_manager import execute_query
@@ -70,8 +72,12 @@ def handle_plot(message, say, client):
         say(f"❌ Error: {e}")
 
 # ---------------- START BOT ----------------
+flask_app = Flask(__name__)
+handler = SlackRequestHandler(app)
+
+@flask_app.route("/slack/events", methods=["POST"])
+def slack_events():
+    return handler.handle(request)
+
 if __name__ == "__main__":
-    SocketModeHandler(
-        app,
-        os.getenv("SLACK_APP_TOKEN")  # MUST be xapp-
-    ).start()
+    flask_app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 3000)))
