@@ -12,7 +12,7 @@ from visualizer import create_plot
 load_dotenv()
 
 # Initialize Slack App
-app = App(token=os.getenv("SLACK_BOT_TOKEN"))
+app = App(token=os.getenv("SLACK_BOT_TOKEN"),signing_secret=os.getenv("SLACK_SIGNING_SECRET"))
 
 # ---------------- USE CASE 1: QUERY ----------------
 @app.message("query:")
